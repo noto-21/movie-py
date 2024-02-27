@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+
+import mysql.connector as mysqlc  # MySQL API
+import argparse as arse  # CLI arg parsing
+from random import choice  # Random selection
+from colorama import Fore, Back  # Colored output
+from enum import Enum  # Enumerated types
+
+# Types of movies
+class MovieType(Enum):
+    FILM = 'film'
+    SHOW = 'show'
+
+# Establish connection
+with mysqlc.connect(host='localhost', user='root', password='Nautsql21#', database='my_movies') as db_conn:
+
+    # Fetch movie titles
+    def fetch(movie_type=None):  # If no arg supplied, then select from either type
+        with db_conn.cursor() as cursor: # Cursor
+            if movie_type:  # Arg
+                cursor.execute("select title from movies where type = %s order by title", (movie_type,))
+            else:  # No arg
+                cursor.execute("select title from movies order by title")
+
+            # Get the title column results and store them in a list
+            return [movie[0] for movie in cursor.fetchall()]  # Return the list of movies
+
+    # List all titles
+    def list_all():
+        film = fetch(MovieType.FILM.value)
+        show = fetch(MovieType.SHOW.value)
+
+        if film or show:
+            print(f'{Fore.RED}Films:')
+            if film:
+                print('\n'.join(film))
+            else:
+                print('No films found!')
+
+            print(f'{Fore.BLUE}\nShows:')
+            if show:
+                print('\n'.join(show))
+            else:
+                print('No shows found!')
+        else:
+            print('No movies found!')
+
+    # List specified titles
+    def list_movies(movie_type=None):
+        movies = fetch(movie_type)
+
+        if movies:
+            print(f'{Fore.LIGHTYELLOW_EX}' + '\n'.join(movies))
+        else:
+            print("No movies found!")
+
+    def recommend(movie_type=None):
+        movies = fetch(movie_type)
+            
+        if movies:  # Print the selection
+            print(f'''{Fore.LIGHTYELLOW_EX}You should watch...{Fore.LIGHTGREEN_EX}
+\t--> {Fore.LIGHTRED_EX}{Back.BLUE}{choice(movies)}{Back.RESET}''')
+        else:  # Null return
+            print('No matching movies found!')
+
+    def main():
+        parser=arse.ArgumentParser(description='Random movie/show recommendation!')  # Arg parser
+        # Type of movie arg
+        parser.add_argument('--type', '-t', nargs='?', choices=['film', 'show'], help='Specify the type of movie (film/show)')
+        # List movies arg
+        parser.add_argument('--list', '-l', choices=['all', 'films', 'shows'], const='all', nargs='?', help='List movies (all/films/shows)')
+
+        args = parser.parse_args()  # Do the thing
+
+        if args.list:  # Listing
+            if args.list == 'films':
+                list_movies(MovieType.FILM.value)
+            elif args.list == 'shows':
+                list_movies(MovieType.SHOW.value)
+            else:
+                list_all()
+        else:  # Choosing
+            if args.type:
+                recommend(args.type)
+            else:
+                recommend()
+             
+    # 'Modularization' or something
+    if __name__ == '__main__':
+        main()
