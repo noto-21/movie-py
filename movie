@@ -11,8 +11,8 @@ class MovieType(Enum):
     FILM = 'film'
     SHOW = 'show'
 
-# Establish connection
-with mysqlc.connect(host='localhost', user='root', password='Nautsql21#', database='my_movies') as db_conn:
+# Establish connection (enter your credentials here)
+with mysqlc.connect(host='localhost', user='', password='', database='my_movies') as db_conn:
 
     # Fetch movie titles
     def fetch(movie_type=None):  # If no arg supplied, then select from either type
