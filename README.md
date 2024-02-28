@@ -6,6 +6,8 @@ Can be placed in `/usr/local/bin` to be used with the shell.  If problems with r
 
 ### MySQL Database
 Please note that movie-py requires a connection to a local MySQL database, meaning that having MySQL installed is a prerequisite.  You can create the schema using the included [sql file](./my_movies.sql).  Once this is done, it is possible to add films and TV shows via the '-i' flag, as is explained below.
+#### SQLite
+NOTE: An implementation using SQLite is currently under construction!  This will hopefully make the backend requirement a little less involved on the client-side of things.
 
 ## Flags
 ```
