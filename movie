@@ -11,7 +11,7 @@ class MovieType(Enum):
     FILM = 'film'
     SHOW = 'show'
 
-# Establish connection (Your credentials here!)
+# Establish connection (YOUR CREDENTIALS HERE!)
 with mysqlc.connect(host='localhost', user='', password='', database='my_movies') as db_conn:
 
     # Fetch movie titles
@@ -24,6 +24,37 @@ with mysqlc.connect(host='localhost', user='', password='', database='my_movies'
 
             # Get the title column results and store them in a list
             return [movie[0] for movie in cursor.fetchall()]  # Return the list of movies
+    
+    # Insert a new movie 
+    def insert(title, type):
+        with db_conn.cursor() as cursor:
+            cursor.execute("insert into movies (title, type) values (%s, %s)", (title, type))
+            db_conn.commit()
+
+    # Remove a movie
+    def remove(title):
+        with db_conn.cursor() as cursor:
+            # Check if title exists
+            cursor.execute("select exists(select 1 from movies where title=%s)", (title,))
+            exists = cursor.fetchone()[0]
+            if not exists:
+                return False
+            
+            # Remove the movie
+            cursor.execute("delete from movies where title=%s", (title,))
+            db_conn.commit()
+            return True
+
+    # Confirm an insertion
+    def confirm(act, title, type=None):
+        if act == 'insert':
+            confirm = input(f"{Fore.LIGHTMAGENTA_EX}Insert {type.lower()} '{title}'?  ('y' to confirm): ").lower().strip()
+            return confirm == 'y' or confirm == 'yes' or confirm == 'oui'
+        elif act == 'remove':
+            confirm = input(f"{Fore.LIGHTMAGENTA_EX}Remove '{title}'?  ('y' to confirm): ").lower().strip()
+            return confirm == 'y' or confirm == 'yes' or confirm == 'oui'
+        else:
+            return
 
     # List all titles
     def list_all():
@@ -31,28 +62,28 @@ with mysqlc.connect(host='localhost', user='', password='', database='my_movies'
         show = fetch(MovieType.SHOW.value)
 
         if film or show:
-            print(f'{Fore.LIGHTRED_EX}Films:')
+            print(f'{Fore.LIGHTRED_EX}-- Films --')
             if film:
                 print('\n'.join(film))
             else:
-                print('No films found!')
+                print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No films found!{Back.RESET}')
 
-            print(f'{Fore.LIGHTBLUE_EX}\nShows:')
+            print(f'{Fore.LIGHTCYAN_EX}\n-- Shows --')
             if show:
                 print('\n'.join(show))
             else:
-                print('No shows found!')
+                print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No shows found!{Back.RESET}')
         else:
-            print('No movies found!')
+            print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!{Back.RESET}')
 
     # List specified titles
     def list_movies(movie_type=None):
         movies = fetch(movie_type)
 
         if movies:
-            print(f'{Fore.LIGHTMAGENTA_EX}' + '\n'.join(movies))
+            print(f'{Fore.LIGHTYELLOW_EX}' + '\n'.join(movies))
         else:
-            print("No movies found!")
+            print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!{Back.RESET}')
 
     def recommend(movie_type=None):
         movies = fetch(movie_type)
@@ -61,18 +92,39 @@ with mysqlc.connect(host='localhost', user='', password='', database='my_movies'
             print(f'''{Fore.LIGHTWHITE_EX}{Back.RED}You should watch...{Back.RESET}{Fore.LIGHTWHITE_EX}
 \t--> {Fore.RED}{Back.LIGHTWHITE_EX}{choice(movies)}{Back.RESET}''')
         else:  # Null return
-            print('No matching movies found!')
+            print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found for recommendation!{Back.RESET}')
 
     def main():
         parser=arse.ArgumentParser(description='Random movie/show recommendation!')  # Arg parser
         # Type of movie arg
-        parser.add_argument('--type', '-t', nargs='?', choices=['film', 'show'], help='Specify the type of movie (film/show)')
+        parser.add_argument('-t', '--type', nargs='?', choices=['film', 'show'], metavar='[film|show]', help='Specify the type of movie to pick (film or show)')
         # List movies arg
-        parser.add_argument('--list', '-l', choices=['all', 'films', 'shows'], const='all', nargs='?', help='List movies (all/films/shows)')
+        parser.add_argument('-l', '--list', choices=['all', 'films', 'shows'], const='all', nargs='?', metavar='[all|films|shows]', help='List movies available for selection (all, films, or shows)')
+        # Insert movies arg
+        parser.add_argument('-i', '--insert', nargs=2, metavar=('<title>', '<type>'), help='Insert a new movie or show into the database (title and type)')
+        # Remove movie arg
+        parser.add_argument('-r', '--remove', nargs='+', metavar='<title>', help='Remove a movie by title(s)')
 
         args = parser.parse_args()  # Do the thing
 
-        if args.list:  # Listing
+        if args.remove:  # Removing
+            for title in args.remove:
+                if confirm("remove", title):
+                    if not remove(title):
+                        print(f"{Fore.LIGHTWHITE_EX}{Back.BLUE}The movie '{title}' is not in the database!{Back.RESET}")
+                    else:
+                        print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}'{title}' removed successfully!{Back.RESET}")
+                else:
+                    print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Removal of '{title}' cancelled!{Back.RESET}")
+        elif args.insert:  # Inserting
+            title, type = args.insert
+            type = type.title()  # Convert to title case
+            if confirm("insert", title, type):
+                insert(title, type)
+                print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}Inserted {type.lower()} '{title}' successfully!{Back.RESET}")
+            else:
+                print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Insertion of {type.lower()} '{title}' cancelled!{Back.RESET}")
+        elif args.list:  # Listing
             if args.list == 'films':
                 list_movies(MovieType.FILM.value)
             elif args.list == 'shows':
