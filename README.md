@@ -1,9 +1,13 @@
 # movie-py
 Recommends your favourite films/shows at random!
 
-Can be placed in `/usr/local/bin` to be called from any directory.  If problems with running occur, try to change execution permission via `chmod +x /usr/local/bin/movie`.
+### Shell Command
+Can be placed in `/usr/local/bin` to be used with the shell.  If problems with running occur, try to change execution permission via `chmod +x /usr/local/bin/movie`.
 
-## Commands
+### MySQL Database
+Please note that movie-py requires a connection to a local MySQL database, meaning that having MySQL installed is a prerequisite.  You can create the schema using the included [sql file](./my_movies.sql).  Once this is done, it is possible to add films and TV shows via the '-i' flag, as is explained below.
+
+## Flags
 ```
 usage: movie [-h] [-t [[film|show]]] [-l [[all|films|shows]]] [-i <title> <type>] [-r <title> [<title> ...]]
 
