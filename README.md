@@ -25,6 +25,12 @@ options:
                         Remove a movie by title(s)
 ```
 
+### Example Usage
+`movie -l`
+`movie --type show`
+`movie -i "Shrek" "film"`
+`movie --remove "Shrek"`
+
 ## Dependencies
 ### Python Packages
 
