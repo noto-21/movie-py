@@ -3,8 +3,11 @@
 import mysql.connector as mysqlc  # MySQL API
 import argparse as arse  # CLI arg parsing
 from random import choice  # Random selection
-from colorama import Fore, Back  # Colored output
+from colorama import Fore, Back, init  # Colored output
 from enum import Enum  # Enumerated types
+
+# Initialize colorama
+init(autoreset=True)
 
 # Types of movies
 class MovieType(Enum):
@@ -62,68 +65,68 @@ with mysqlc.connect(host='localhost', user='', password='', database='my_movies'
         show = fetch(MovieType.SHOW.value)
 
         if film or show:
-            print(f'{Fore.LIGHTRED_EX}-- Films --')
+            print(f'{Fore.BLACK}{Back.LIGHTRED_EX}-- Films --')
             if film:
-                print('\n'.join(film))
+                print(Fore.LIGHTRED_EX + '\n'.join(film))
             else:
-                print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No films found!{Back.RESET}')
+                print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No films found!')
 
-            print(f'{Fore.LIGHTCYAN_EX}\n-- Shows --')
+            print(f'{Fore.BLACK}\n{Back.LIGHTCYAN_EX}-- Shows --')
             if show:
-                print('\n'.join(show))
+                print(Fore.LIGHTCYAN_EX + '\n'.join(show))
             else:
-                print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No shows found!{Back.RESET}')
+                print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No shows found!')
         else:
-            print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!{Back.RESET}')
+            print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!')
 
     # List specified titles
     def list_movies(movie_type=None):
         movies = fetch(movie_type)
 
         if movies:
-            print(f'{Fore.LIGHTYELLOW_EX}' + '\n'.join(movies))
+            print(Fore.LIGHTYELLOW_EX + '\n'.join(movies))
         else:
-            print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!{Back.RESET}')
+            print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!')
 
     def recommend(movie_type=None):
         movies = fetch(movie_type)
             
         if movies:  # Print the selection
             print(f'''{Fore.LIGHTWHITE_EX}{Back.RED}You should watch...{Back.RESET}{Fore.LIGHTWHITE_EX}
-\t--> {Fore.RED}{Back.LIGHTWHITE_EX}{choice(movies)}{Back.RESET}''')
+\t--> {Fore.RED}{Back.LIGHTWHITE_EX}{choice(movies)}''')
         else:  # Null return
-            print('{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found for recommendation!{Back.RESET}')
+            print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found for recommendation!')
 
     def main():
-        parser=arse.ArgumentParser(description='Random movie/show recommendation!')  # Arg parser
+        arser = arse.ArgumentParser(description='Random movie/show recommendation!')  # Arg parser
         # Type of movie arg
-        parser.add_argument('-t', '--type', nargs='?', choices=['film', 'show'], metavar='[film|show]', help='Specify the type of movie to pick (film or show)')
+        arser.add_argument('-t', '--type', nargs='?', choices=['film', 'show'], metavar='[film|show]', help='Specify the type of movie to pick (film or show)')
         # List movies arg
-        parser.add_argument('-l', '--list', choices=['all', 'films', 'shows'], const='all', nargs='?', metavar='[all|films|shows]', help='List movies available for selection (all, films, or shows)')
+        arser.add_argument('-l', '--list', choices=['all', 'films', 'shows'], const='all', nargs='?', metavar='[all|films|shows]', help='List movies available for selection (all, films, or shows)')
         # Insert movies arg
-        parser.add_argument('-i', '--insert', nargs=2, metavar=('<title>', '<type>'), help='Insert a new movie or show into the database (title and type)')
+        arser.add_argument('-i', '--insert', nargs=2, metavar=('<title>', '<type>'), help='Insert a new movie or show into the database (title and type)')
         # Remove movie arg
-        parser.add_argument('-r', '--remove', nargs='+', metavar='<title>', help='Remove a movie by title(s)')
+        arser.add_argument('-r', '--remove', nargs='+', metavar='<title>', help='Remove a movie by title(s)')
 
-        args = parser.parse_args()  # Do the thing
+        args = arser.parse_args()  # Do the thing
 
         if args.remove:  # Removing
             for title in args.remove:
                 if confirm("remove", title):
                     if not remove(title):
-                        print(f"{Fore.LIGHTWHITE_EX}{Back.BLUE}The movie '{title}' is not in the database!{Back.RESET}")
+                        print(f"{Fore.LIGHTWHITE_EX}{Back.BLUE}The movie {Fore.LIGHTYELLOW_EX}'{title}'{Fore.LIGHTWHITE_EX} is not in the database!")
                     else:
-                        print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}'{title}' removed successfully!{Back.RESET}")
+                        print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}'{title}' removed successfully!")
                 else:
-                    print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Removal of '{title}' cancelled!{Back.RESET}")
+                    print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Removal of '{title}' cancelled!")
         elif args.insert:  # Inserting
             title, type = args.insert
             type = type.title()  # Convert to title case
             if confirm("insert", title, type):
                 insert(title, type)
-                print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}Inserted {type.lower()} '{title}' successfully!{Back.RESET}")
+                print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}Inserted {type.lower()} '{title}' successfully!")
             else:
-                print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Insertion of {type.lower()} '{title}' cancelled!{Back.RESET}")
+                print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Insertion of {type.lower()} '{title}' cancelled!")
         elif args.list:  # Listing
             if args.list == 'films':
                 list_movies(MovieType.FILM.value)
