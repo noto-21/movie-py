@@ -48,7 +48,7 @@ with mysqlc.connect(host='localhost', user='', password='', database='my_movies'
             db_conn.commit()
             return True
 
-    # Confirm an insertion
+    # Confirm an insertion or deletion
     def confirm(act, title, type=None):
         if act == 'insert':
             confirm = input(f"{Fore.LIGHTMAGENTA_EX}Insert {type.lower()} '{title}'?  ('y' to confirm): ").lower().strip()
