@@ -4,10 +4,10 @@ Recommends your favourite films/shows at random!
 ### Shell Command
 Can be placed in `/usr/local/bin` to be used with the shell.  If problems with running occur, try to change execution permission via `chmod +x /usr/local/bin/movie`.
 
-### MySQL Database
-Please note that movie-py requires a connection to a local MySQL database, meaning that having MySQL installed is a prerequisite.  You can create the schema using the included [sql file](./my_movies.sql).  Once this is done, it is possible to add films and TV shows via the '-i' flag, as is explained below.
-#### SQLite
-NOTE: An implementation using SQLite is currently under construction!  This will hopefully make the backend requirement a little less involved on the client-side of things.
+## SQLite Database
+SQLite integration is now complete!  This will hopefully make the backend requirement a little less involved on the client-side of things compared to MySQL.  
+
+The `movie-py.db` file will be stored in `/home/<username>/.config` on Linux, and `C:\Users\<username>\AppData\Local` on Windows.  This will store your added films and TV shows via the '-i' option, as is explained below.
 
 ## Flags
 ```
