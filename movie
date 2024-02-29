@@ -158,13 +158,12 @@ try:
             # Print the results
             for result in results:
                 # Background colour
-                bg = Back.RED if result[0] == 'Film' else Back.CYAN
+                bg = Back.LIGHTRED_EX if result[0] == 'Film' else Back.LIGHTCYAN_EX
                 # Foreground colour
-                fg_1 = Fore.LIGHTWHITE_EX if result[0] == 'Film' else Fore.BLACK
+                fg_1 = Fore.BLACK
                 fg_2 = Fore.LIGHTRED_EX if result[0] == 'Film' else Fore.LIGHTCYAN_EX
                 print(f'{bg}{fg_1}{result[0]}s:', end='')
                 print(f' {fg_2}{result[1]}')
-                print() if result[0] == 'Film' else None
         
         # Recommend a movie
         def recommend(movie_type=None):
