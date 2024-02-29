@@ -4,6 +4,7 @@ import os  # Environment variables
 import traceback  # Stack trace
 import sqlite3 as sqlite  # SQLite API
 import argparse as arse  # CLI arg parsing
+from itertools import zip_longest  # Zip lists of different lengths
 from pathlib import Path  # Path manipulation
 from random import choice  # Random selection
 from colorama import Fore, Back, init  # Colored output
@@ -19,7 +20,7 @@ class MovieType(Enum):
 
 # OS specific connection string with pathlib
 if os.name == 'nt':  # Windows
-    db_dir = Path(Path.home(), 'AppData', 'Local', 'movie')
+    db_dir = Path(Path.home(), 'AppData', 'Local')
 else:  # Linux
     db_dir = Path(Path.home(), '.config')
 
@@ -78,6 +79,34 @@ try:
             else:
                 return
 
+        # List all titles in column format
+        def list_col():
+            film = fetch(MovieType.FILM.value.title())  # Fetch films
+            show = fetch(MovieType.SHOW.value.title())  # Fetch shows
+
+            if film or show:
+                # Calculate the width of each column
+                max_title_len_film = max(len(title) for title in film) if film else 0
+                max_title_len_show = max(len(title) for title in show) if show else 0
+
+                # Determine the total width for each header
+                total_width = max(max_title_len_film, max_title_len_show)
+
+                # Center the headers over their respective lists
+                films_header = f'{Fore.BLACK}{Back.LIGHTRED_EX}{"-- Films --":^{total_width}}'
+                shows_header = f' {Fore.BLACK}{Back.LIGHTCYAN_EX}{"-- Shows --":^{total_width}}'
+
+                # Print the headers
+                print('\n' + films_header, shows_header)
+
+                # Print the movies and shows
+                for f, s in zip_longest(film, show, fillvalue=''):
+                    print(f'{Fore.LIGHTRED_EX}{f:^{total_width}}  {Fore.LIGHTCYAN_EX}{s:^{total_width}}')
+                print()
+
+            else:
+                print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!')
+
         # List all titles
         def list_all():
             film = fetch(MovieType.FILM.value.title())
@@ -125,6 +154,8 @@ try:
             arser.add_argument('-t', '--type', nargs='?', choices=['film', 'show'], metavar='[film|show]', help='Specify the type of movie to pick (film or show)')
             # List movies arg
             arser.add_argument('-l', '--list', choices=['all', 'films', 'shows'], const='all', nargs='?', metavar='[all|films|shows]', help='List movies available for selection (all, films, or shows)')
+            # Column list arg
+            arser.add_argument('-c', '--columns', action='store_true', help='List movies in columns')
             # Insert movies arg
             arser.add_argument('-i', '--insert', nargs=2, metavar=('<title>', '<type>'), help='Insert a new movie or show into the database (title and type)')
             # Remove movie arg
@@ -150,12 +181,14 @@ try:
                 else:
                     print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Insertion of {type.lower()} '{title}' cancelled!")
             elif args.list:  # Listing
-                if args.list == 'films':
+                if args.list == 'films':  # Films
                     list_movies(MovieType.FILM.value)
-                elif args.list == 'shows':
+                elif args.list == 'shows':  # Shows
                     list_movies(MovieType.SHOW.value)
-                else:
+                else:  # All
                     list_all()
+            elif args.columns:  # Columns
+                    list_col()
             elif args.type:  # Choosing
                 recommend(args.type)
             else:
