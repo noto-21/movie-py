@@ -2,7 +2,7 @@
 Recommends your favourite films/shows at random!
 
 ### Shell Command
-Can be placed in `/usr/local/bin` to be used with the shell.  If problems with running occur, try to change execution permission via `chmod +x /usr/local/bin/movie`.
+Can be placed in `/usr/local/bin` (with root permission) to be used with the shell.  If problems with running occur, try to change execution permission via `sudo chmod +x /usr/local/bin/movie`.
 
 ## SQLite Database
 SQLite integration is now complete!  This will hopefully make the backend requirement a little less involved on the client-side of things compared to MySQL.  
