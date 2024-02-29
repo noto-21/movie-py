@@ -153,9 +153,9 @@ try:
             # Type of movie arg
             arser.add_argument('-t', '--type', nargs='?', choices=['film', 'show'], metavar='[film|show]', help='Specify the type of movie to pick (film or show)')
             # List movies arg
-            arser.add_argument('-l', '--list', choices=['all', 'films', 'shows'], const='all', nargs='?', metavar='[all|films|shows]', help='List movies available for selection (all, films, or shows)')
+            arser.add_argument('-l', '--list', choices=['all', 'films', 'shows'], const='all', nargs='?', metavar='[all|films|shows]', help='List movies available for selection (all, films, or shows), for copy/paste situations')
             # Column list arg
-            arser.add_argument('-c', '--columns', action='store_true', help='List movies in columns')
+            arser.add_argument('-c', '--columns', action='store_true', help='List all movies in column format, for aesthetic output')
             # Insert movies arg
             arser.add_argument('-i', '--insert', nargs=2, metavar=('<title>', '<type>'), help='Insert a new movie or show into the database (title and type)')
             # Remove movie arg
