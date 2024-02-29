@@ -11,7 +11,7 @@ The `movie-py.db` file will be stored in `/home/<username>/.config` on Linux, an
 
 ## Flags
 ```
-usage: movie [-h] [-t [[film|show]]] [-l [[all|films|shows]]] [-i <title> <type>] [-r <title> [<title> ...]]
+usage: movie [-h] [-t [[film|show]]] [-l [[all|films|shows]]] [-c] [-i <title> <type>] [-r <title> [<title> ...]] [-a [[films|shows|all]]]
 
 Random movie/show recommendation!
 
@@ -20,11 +20,14 @@ options:
   -t [[film|show]], --type [[film|show]]
                         Specify the type of movie to pick (film or show)
   -l [[all|films|shows]], --list [[all|films|shows]]
-                        List movies available for selection (all, films, or shows)
+                        List movies available for selection (all, films, or shows), for copy/paste situations
+  -c, --columns         List all movies in column format, for aesthetic output
   -i <title> <type>, --insert <title> <type>
                         Insert a new movie or show into the database (title and type)
   -r <title> [<title> ...], --remove <title> [<title> ...]
                         Remove a movie by title(s)
+  -a [[films|shows|all]], --amount [[films|shows|all]]
+                        View the number of movies available in the database (films, shows, or all)
 ```
 
 ### Example Usage

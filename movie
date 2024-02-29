@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+# TODO:
+# 1. Implement a way to edit titles?
+# 2. Implement a way to back the database up into a text file or something
+# 3. Implement a way to restore the database after
+# 4. Implement better column flag functionality with other flags (e.g., '-ac' or '-lc')
+# 5. Implement genres (e.g., action, comedy, drama, etc.), and a way to view/filter them
+# 6. Clean up code
+# 7. Implement type-specific colors for normal use-case output (e.g., red for films, cyan for shows instead of red and white for all)
+
 import os  # Environment variables
 import traceback  # Stack trace
 import sqlite3 as sqlite  # SQLite API
@@ -128,7 +137,7 @@ try:
                 print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!')
 
         # List specified titles
-        def list_movies(movie_type=None):
+        def list_movies(movie_type):
             movies = fetch(movie_type.title())
 
             if movies:
@@ -136,6 +145,28 @@ try:
             else:
                 print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!')
 
+        # View the number of movies
+        def amount(movie_type=None):
+            if movie_type == 'film' or movie_type == 'show':
+                cursor.execute('select type, count(*) from movies where type=? group by type', (movie_type.title(),))  # Select from specified type
+            elif movie_type == 'all':
+                cursor.execute('select type, count(*) from movies group by type')  # Select from all types
+
+            # Get the results and store them in a list
+            results = cursor.fetchall()
+
+            # Print the results
+            for result in results:
+                # Background colour
+                bg = Back.RED if result[0] == 'Film' else Back.CYAN
+                # Foreground colour
+                fg_1 = Fore.LIGHTWHITE_EX if result[0] == 'Film' else Fore.BLACK
+                fg_2 = Fore.LIGHTRED_EX if result[0] == 'Film' else Fore.LIGHTCYAN_EX
+                print(f'{bg}{fg_1}{result[0]}s:', end='')
+                print(f' {fg_2}{result[1]}')
+                print() if result[0] == 'Film' else None
+        
+        # Recommend a movie
         def recommend(movie_type=None):
             if movie_type:
                 movies = fetch(movie_type.title())
@@ -160,6 +191,8 @@ try:
             arser.add_argument('-i', '--insert', nargs=2, metavar=('<title>', '<type>'), help='Insert a new movie or show into the database (title and type)')
             # Remove movie arg
             arser.add_argument('-r', '--remove', nargs='+', metavar='<title>', help='Remove a movie by title(s)')
+            # View amount of movies arg
+            arser.add_argument('-a', '--amount', choices=['films', 'shows', 'all'], const='all', nargs='?', metavar='[films|shows|all]', help='View the number of movies available in the database (films, shows, or all)')
 
             args = arser.parse_args()  # Do the thing
 
@@ -189,6 +222,13 @@ try:
                     list_all()
             elif args.columns:  # Columns
                     list_col()
+            elif args.amount:  # Amounts'
+                if args.amount == 'films':  # Films
+                    amount(MovieType.FILM.value)
+                elif args.amount == 'shows':  # Shows
+                    amount(MovieType.SHOW.value)
+                else:  # All
+                    amount(args.amount)
             elif args.type:  # Choosing
                 recommend(args.type)
             else:
