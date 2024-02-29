@@ -36,10 +36,4 @@ options:
 ## Dependencies
 ### Python Packages
 
-1. mysql-connector-python: Provides MySQL API for Python.  Install using `pip install mysql-connector-python`
-2. colorama: Library for colored terminal text output.  Install using `pip install colorama`
-3. argparse: Library for parsing command-line arguments.  Included in Python standard library.
-4. enum: Standard library for creating enumerated types.  Included in Python standard library.
-
-### Quick Install
-`pip install -r requirements.txt`
+- colorama: Library for colored terminal text output.  Install using `pip install colorama`
