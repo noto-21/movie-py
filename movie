@@ -238,8 +238,8 @@ try:
     if __name__ == '__main__':
         main()
 
-except sqlite.Error as e:
+except sqlite.Error as e:  # SQLite connection error
     print(f"SQLite connection error: {e}")
-except Exception as e:
+except Exception as e:  # Other error
     print(f"Error: {e}")
     traceback.print_exc()
