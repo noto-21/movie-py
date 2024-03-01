@@ -43,10 +43,8 @@ conn_str = Path(db_dir, 'movie-py.db')
 
 
 try:  # Try to do the thing
-
     # Establish connection to SQLite DB located in home directory
     with sqlite.connect(conn_str) as db_conn:
-
         # Initialize cursor
         cursor = db_conn.cursor()
 
@@ -74,6 +72,17 @@ try:  # Try to do the thing
 
             # Get the title column results and store them in a list
             return [movie[0] for movie in cursor.fetchall()]  # Return the list of movies
+        
+
+        # Fetch with title and type
+        def fetch_with_type(movie_type=None):
+            if movie_type:
+                cursor.execute('select title, type from movies where type=? order by title asc', (movie_type,))
+            else:
+                cursor.execute('select title, type from movies order by title')
+
+            # Get the results and store them in a list
+            return cursor.fetchall()
 
 
         # Insert a new movie
@@ -193,14 +202,19 @@ try:  # Try to do the thing
 
         # Recommend a movie
         def recommend(movie_type=None):
-            if movie_type:
-                movies = fetch(movie_type.title())
-            else:
-                movies = fetch(movie_type)
+            if movie_type:  # If a type is specified
+                movies = fetch_with_type(movie_type.title())
+            else:  # If no type is specified
+                movies = fetch_with_type()
+
+            recomm = list(choice(movies)) if movies else None  # Randomly select a movie from the list (if it exists)
+
+            fg = Fore.LIGHTWHITE_EX  # Foreground color
+            bg = Back.LIGHTRED_EX if recomm[1] == 'Film' else Back.LIGHTCYAN_EX  # Background color
 
             if movies:  # Print the selection
-                print(f'''{Fore.LIGHTWHITE_EX}{Back.RED}You should watch...{Back.RESET}{Fore.LIGHTWHITE_EX}
-    \t--> {Fore.RED}{Back.LIGHTWHITE_EX}{choice(movies)}''')
+                print(f'{Fore.BLACK}{Back.LIGHTYELLOW_EX}You should watch...')
+                print(f'\t--> {fg}{bg}{recomm[0]}')
             else:  # Null return
                 print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found for recommendation!')
 
