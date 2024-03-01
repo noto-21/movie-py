@@ -267,13 +267,13 @@ try:  # Try to do the thing
                 list(choice(movies)) if movies else None
             )  # Randomly select a movie from the list (if it exists)
 
-            fg = Fore.LIGHTWHITE_EX  # Foreground color
+            fg = Fore.BLACK  # Foreground color
             bg = (
                 Back.LIGHTRED_EX if recomm[1] == "Film" else Back.LIGHTCYAN_EX
             )  # Background color
 
             if movies:  # Print the selection
-                print(f"{Fore.BLACK}{Back.LIGHTYELLOW_EX}You should watch...")
+                print(f"{Fore.LIGHTWHITE_EX}{Back.MAGENTA}You should watch...")
                 print(f"\t--> {fg}{bg}{recomm[0]}")
             else:  # Null return
                 print(
