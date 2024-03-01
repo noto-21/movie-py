@@ -9,6 +9,7 @@
 # 6. Clean up code
 # 7. Implement type-specific colors for normal use-case output (e.g., red for films, cyan for shows instead of red and white for all)
 
+
 import os  # Environment variables
 import traceback  # Stack trace
 import sqlite3 as sqlite  # SQLite API
@@ -19,13 +20,16 @@ from random import choice  # Random selection
 from colorama import Fore, Back, init  # Colored output
 from enum import Enum  # Enumerated types
 
+
 # Initialize colorama
 init(autoreset=True)
+
 
 # Types of movies
 class MovieType(Enum):
     FILM = 'film'
     SHOW = 'show'
+
 
 # OS specific connection string with pathlib
 if os.name == 'nt':  # Windows
@@ -33,21 +37,34 @@ if os.name == 'nt':  # Windows
 else:  # Linux
     db_dir = Path(Path.home(), '.config')
 
+
 # Construct the full path to the SQLite database file
 conn_str = Path(db_dir, 'movie-py.db')
+
 
 try:
     # Establish connection to SQLite DB located in home directory
     with sqlite.connect(conn_str) as db_conn:
 
+
         # Initialize cursor
         cursor = db_conn.cursor()
+
 
         # Create the movies table if it doesn't exist
         cursor.execute('''create table if not exists movies (
             id integer primary key autoincrement,
             title text not null,
             type text not null)''')
+        
+
+        # Check for valid input (i.e., if an input movie type is a show or a film)
+        def valid(movie_type=None):
+            if movie_type:
+                return movie_type.title() in [MovieType.FILM.value.title(), MovieType.SHOW.value.title()]
+            else:
+                return True
+
 
         # Fetch movie titles
         def fetch(movie_type=None):  # If no arg supplied, then select from either type
@@ -59,10 +76,16 @@ try:
             # Get the title column results and store them in a list
             return [movie[0] for movie in cursor.fetchall()]  # Return the list of movies
 
+
         # Insert a new movie
         def insert(title, type):
-            cursor.execute("insert into movies (title, type) values (?, ?)", (title, type))
-            db_conn.commit()
+            if type.title() in [MovieType.FILM.value.title(), MovieType.SHOW.value.title()]:  # Check if type is valid
+                cursor.execute("insert into movies (title, type) values (?, ?)", (title, type))
+                db_conn.commit()
+                return True
+            else:
+                return False
+
 
         # Remove a movie
         def remove(title):
@@ -77,6 +100,7 @@ try:
             db_conn.commit()
             return True
 
+
         # Confirm an insertion or deletion
         def confirm(act, title, type=None):
             if act == 'insert':
@@ -85,8 +109,7 @@ try:
             elif act == 'remove':
                 confirm = input(f"{Fore.LIGHTMAGENTA_EX}Remove '{title}'?  ('y' to confirm): ").lower().strip()
                 return confirm == 'y' or confirm == 'yes' or confirm == 'oui'
-            else:
-                return
+
 
         # List all titles in column format
         def list_col():
@@ -116,6 +139,7 @@ try:
             else:
                 print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!')
 
+
         # List all titles
         def list_all():
             film = fetch(MovieType.FILM.value.title())
@@ -136,6 +160,7 @@ try:
             else:
                 print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!')
 
+
         # List specified titles
         def list_movies(movie_type):
             movies = fetch(movie_type.title())
@@ -144,6 +169,7 @@ try:
                 print(Fore.LIGHTYELLOW_EX + '\n'.join(movies))
             else:
                 print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!')
+
 
         # View the number of movies
         def amount(movie_type=None):
@@ -165,6 +191,7 @@ try:
                 print(f'{bg}{fg_1}{result[0]}s:', end='')
                 print(f' {fg_2}{result[1]}')
         
+
         # Recommend a movie
         def recommend(movie_type=None):
             if movie_type:
@@ -177,6 +204,7 @@ try:
     \t--> {Fore.RED}{Back.LIGHTWHITE_EX}{choice(movies)}''')
             else:  # Null return
                 print(f'{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found for recommendation!')
+
 
         def main():
             arser = arse.ArgumentParser(description='Random movie/show recommendation!')  # Arg parser
@@ -193,7 +221,9 @@ try:
             # View amount of movies arg
             arser.add_argument('-a', '--amount', choices=['films', 'shows', 'all'], const='all', nargs='?', metavar='[films|shows|all]', help='View the number of movies available in the database (films, shows, or all)')
 
+
             args = arser.parse_args()  # Do the thing
+
 
             if args.remove:  # Removing
                 for title in args.remove:
@@ -204,14 +234,18 @@ try:
                             print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}'{title}' removed successfully!")
                     else:
                         print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Removal of '{title}' cancelled!")
+            
             elif args.insert:  # Inserting
                 title, type = args.insert
                 type = type.title()  # Convert to title case
-                if confirm("insert", title, type):
-                    insert(title, type)
-                    print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}Inserted {type.lower()} '{title}' successfully!")
+                if valid(type):
+                    if confirm("insert", title, type) and insert(title, type):
+                        print(f"{Fore.LIGHTWHITE_EX}{Back.GREEN}Inserted {type.lower()} '{title}' successfully!")
+                    else:
+                        print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Insertion of {type.lower()} '{title}' cancelled!")
                 else:
-                    print(f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}Insertion of {type.lower()} '{title}' cancelled!")
+                    print(f"{Fore.LIGHTWHITE_EX}{Back.BLUE}Invalid type '{type.title()}'!  Please specify either 'film' or 'show'.")
+            
             elif args.list:  # Listing
                 if args.list == 'films':  # Films
                     list_movies(MovieType.FILM.value)
@@ -219,8 +253,10 @@ try:
                     list_movies(MovieType.SHOW.value)
                 else:  # All
                     list_all()
+            
             elif args.columns:  # Columns
                     list_col()
+           
             elif args.amount:  # Amounts'
                 if args.amount == 'films':  # Films
                     amount(MovieType.FILM.value)
@@ -228,14 +264,17 @@ try:
                     amount(MovieType.SHOW.value)
                 else:  # All
                     amount(args.amount)
+            
             elif args.type:  # Choosing
                 recommend(args.type)
+            
             else:
                 recommend()
 
     # 'Modularization' or something
     if __name__ == '__main__':
         main()
+
 
 except sqlite.Error as e:  # SQLite connection error
     print(f"SQLite connection error: {e}")
