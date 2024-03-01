@@ -8,7 +8,6 @@
 # 4. Implement better column flag functionality with other flags (e.g., '-ac' or '-lc')
 # 5. Implement genres (e.g., action, comedy, drama, etc.), and a way to view/filter them
 # 6. Clean up code
-# 7. Implement type-specific colors for normal use-case output (e.g., red for films, cyan for shows instead of red and white for all)
 
 
 # Imports #
