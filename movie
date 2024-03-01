@@ -2,12 +2,13 @@
 
 
 # TODO:
-# 1. Implement a way to edit titles?
-# 2. Implement a way to back the database up into a text file or something
-# 3. Implement a way to restore the database after
-# 4. Implement better column flag functionality with other flags (e.g., '-ac' or '-lc')
-# 5. Implement genres (e.g., action, comedy, drama, etc.), and a way to view/filter them
-# 6. Clean up code
+# Unit testing with pytest!
+# Implement a way to edit titles?
+# Implement a way to back the database up into a text file or something
+# Implement a way to restore the database after
+# Implement better column flag functionality with other flags (e.g., '-ac' or '-lc')
+# Implement genres (e.g., action, comedy, drama, etc.), and a way to view/filter them
+# Clean up code
 
 
 # Imports #
