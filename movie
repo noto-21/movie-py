@@ -8,6 +8,7 @@
 # Implement better column flag functionality (e.g., '-ac' or '-lc')
 # Implement genres (e.g., action, comedy, drama, etc.)
 # Clean up code
+# Implement SQL-Injection Prevention
 
 # Imports
 import argparse as arse  # CLI arg parsing
