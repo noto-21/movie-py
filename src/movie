@@ -2,13 +2,11 @@
 
 # TODO:
 # Unit testing with pytest!
-# Implement a way to edit titles?
+# Implement a way to edit movie titles and types
 # Implement a way to back the database up into a text file or something
-# Implement a way to restore the database after
 # Implement better column flag functionality (e.g., '-ac' or '-lc')
 # Implement genres (e.g., action, comedy, drama, etc.)
-# Clean up code
-# Implement SQL-Injection Prevention
+# Clean up code and add comments
 
 # Imports
 import argparse as arse  # CLI arg parsing
