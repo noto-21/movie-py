@@ -11,16 +11,17 @@
 # Clean up code
 
 
+import argparse as arse  # CLI arg parsing
 # Imports #
 import os  # Environment variables
-import traceback  # Stack trace
 import sqlite3 as sqlite  # SQLite API
-import argparse as arse  # CLI arg parsing
+import traceback  # Stack trace
+from enum import Enum  # Enumerated types
 from itertools import zip_longest  # Zip lists of different lengths
 from pathlib import Path  # Path manipulation
 from random import choice  # Random selection
-from colorama import Fore, Back, init  # Colored output
-from enum import Enum  # Enumerated types
+
+from colorama import Back, Fore, init  # Colored output
 
 # Initialize colorama
 init(autoreset=True)
