@@ -116,6 +116,11 @@ try:  # Try to do the thing
             )
             exists = cursor.fetchone()[0]
             if not exists:
+                print(
+                    f"{Fore.LIGHTWHITE_EX}{Back.BLUE}The movie "
+                    f"{Fore.LIGHTYELLOW_EX}'{title}'"
+                    f"{Fore.LIGHTWHITE_EX} is not in the database!"
+                )
                 return False
 
             # Remove the movie
@@ -343,18 +348,11 @@ try:  # Try to do the thing
 
             if args.remove:  # Removing
                 for title in args.remove:
-                    if confirm("remove", title):
-                        if not remove(title):
-                            print(
-                                f"{Fore.LIGHTWHITE_EX}{Back.BLUE}The movie "
-                                f"{Fore.LIGHTYELLOW_EX}'{title}'"
-                                f"{Fore.LIGHTWHITE_EX} is not in the database!"
-                            )
-                        else:
-                            print(
-                                f"{Fore.LIGHTWHITE_EX}{Back.GREEN}"
-                                f"'{title}' removed successfully!"
-                            )
+                    if confirm("remove", title) and remove(title):
+                        print(
+                            f"{Fore.LIGHTWHITE_EX}{Back.GREEN}"
+                            f"'{title}' removed successfully!"
+                        )
                     else:
                         print(
                             f"{Fore.LIGHTMAGENTA_EX}{Back.GREEN}"
