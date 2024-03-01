@@ -215,10 +215,15 @@ try:  # Try to do the thing
 
         # List specified titles
         def list_movies(movie_type):
-            movies = fetch(movie_type.title())
+            movies = fetch(movie_type.title())  # Fetch movies
+
+            fg = (Fore.LIGHTYELLOW_EX
+                  if movie_type.title() == "Film"
+                  else Fore.LIGHTMAGENTA_EX
+                  )
 
             if movies:
-                print(Fore.LIGHTYELLOW_EX + "\n".join(movies))
+                print(fg + "\n".join(movies))
             else:
                 print(f"{Fore.LIGHTWHITE_EX}{Back.BLUE}No movies found!")
 
