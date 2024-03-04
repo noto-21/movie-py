@@ -7,7 +7,7 @@ Can be placed in `/usr/local/bin` (with root permission) to be used with the she
 ## SQLite Database
 SQLite integration is now complete!  This will hopefully make the backend requirement a little less involved on the client-side of things compared to MySQL.  
 
-The `movie-py.db` file will be stored in `/home/<username>/.config` on Linux, and `C:\Users\<username>\AppData\Local` on Windows.  This will store your added films and TV shows via the '-i' option, as is explained below.
+The `movie-py.db` file will be stored in `/home/<username>/.config` on Linux, and `C:\Users\<username>\AppData\Local` on Windows.  This will provide storage for your films and TV shows via '-i', as is explained below.
 
 ## Flags
 ```
