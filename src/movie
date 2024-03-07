@@ -92,12 +92,12 @@ try:  # Try to do the thing
             # Get the results and store them in a list
             return cursor.fetchall()
 
-        # Insert a new movie
+        # Insert a new movie, if the same movie is not already in the database
         def insert(title, type):
-            if type.title() in [
+            if type.title() in [ # Check if type is valid
                 MovieType.FILM.value.title(),
                 MovieType.SHOW.value.title(),
-            ]:  # Check if type is valid
+            ] and title not in fetch():  # Check if title is already in the database
                 cursor.execute(
                     "insert into movies (title, type) values (?, ?)",
                     (title, type),
@@ -105,6 +105,12 @@ try:  # Try to do the thing
                 db_conn.commit()
                 return True
             else:
+                if title in fetch():
+                    print(
+                        f"{Fore.LIGHTWHITE_EX}{Back.BLUE}The movie "
+                        f"{Fore.LIGHTYELLOW_EX}'{title}'"
+                        f"{Fore.LIGHTWHITE_EX} is already in the database!"
+                    )
                 return False
 
         # Remove a movie
