@@ -12,11 +12,12 @@
 import argparse as arse  # CLI arg parsing
 import os  # Environment variables
 import sqlite3 as sqlite  # SQLite API
-import traceback  # Stack trace
 from enum import Enum  # Enumerated types
 from itertools import zip_longest  # Zip lists of different lengths
 from pathlib import Path  # Path manipulation
 from random import choice  # Random selection
+from traceback import print_exc  # Stack trace
+
 from colorama import Back, Fore, init  # Colored output
 
 # Initialize colorama
@@ -424,4 +425,4 @@ except sqlite.Error as e:  # SQLite connection error
     print(f"SQLite connection error: {e}")
 except Exception as e:  # Other error
     print(f"Error: {e}")
-    traceback.print_exc()
+    print_exc()
