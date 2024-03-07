@@ -94,11 +94,11 @@ try:  # Try to do the thing
 
         # Insert a new movie, if the same movie is not already in the database
         def insert(title, type):
-            if type.title() in [ # Check if type is valid
+            if type.title() in [  # Check if type is valid
                 MovieType.FILM.value.title(),
                 MovieType.SHOW.value.title(),
-            ] and title.lower() not in (t.lower() for t in fetch()):  # Check if title is already in the database
-                cursor.execute(
+            ] and title.lower() not in (t.lower() for t in fetch()):
+                cursor.execute(  # Check if title is already in the database
                     "insert into movies (title, type) values (?, ?)",
                     (title, type),
                 )
