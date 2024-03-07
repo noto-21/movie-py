@@ -97,7 +97,7 @@ try:  # Try to do the thing
             if type.title() in [ # Check if type is valid
                 MovieType.FILM.value.title(),
                 MovieType.SHOW.value.title(),
-            ] and title not in fetch():  # Check if title is already in the database
+            ] and title.lower() not in (t.lower() for t in fetch()):  # Check if title is already in the database
                 cursor.execute(
                     "insert into movies (title, type) values (?, ?)",
                     (title, type),
@@ -105,7 +105,7 @@ try:  # Try to do the thing
                 db_conn.commit()
                 return True
             else:
-                if title in fetch():
+                if title.lower() in (t.lower() for t in fetch()):
                     print(
                         f"{Fore.LIGHTWHITE_EX}{Back.BLUE}The movie "
                         f"{Fore.LIGHTYELLOW_EX}'{title}'"
