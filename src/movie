@@ -11,7 +11,7 @@
 # Imports
 import argparse as arse  # CLI arg parsing
 import os  # Environment variables
-import sqlite3 as sqlite  # SQLite API
+import sqlite3 as sqli  # SQLite API
 from enum import Enum  # Enumerated types
 from itertools import zip_longest  # Zip lists of different lengths
 from pathlib import Path  # Path manipulation
@@ -42,7 +42,7 @@ conn_str = Path(db_dir, "movie-py.db")
 
 try:  # Try to do the thing
     # Establish connection to SQLite DB located in home directory
-    with sqlite.connect(conn_str) as db_conn:
+    with sqli.connect(conn_str) as db_conn:
         # Initialize cursor
         cursor = db_conn.cursor()
 
@@ -412,7 +412,7 @@ try:  # Try to do the thing
         main()
 
 
-except sqlite.Error as e:  # SQLite connection error
+except sqli.Error as e:  # SQLite connection error
     print(f"SQLite connection error: {e}")
 except Exception as e:  # Other error
     print(f"Error: {e}")
