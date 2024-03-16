@@ -393,7 +393,7 @@ try:  # Try to do the thing
             elif args.columns:  # Columns
                 list_col()
 
-            elif args.amount:  # Amounts'
+            elif args.amount:  # Amounts
                 if args.amount == 'films':  # Films
                     amount(MovieType.FILM.value)
                 elif args.amount == 'shows':  # Shows
