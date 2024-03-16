@@ -136,21 +136,12 @@ try:  # Try to do the thing
 
         # Confirm an insertion or deletion
         def confirm(act, title, type=None):
-            if act == "insert":
+            if act.lower() in ['insert', 'remove']:
                 confirm = (
                     input(
-                        f"{Fore.LIGHTMAGENTA_EX}Insert {type.lower()}"
+                        f'{Fore.LIGHTMAGENTA_EX}{act.title()} '
+                        f'{type.lower() if type else "movie"}'
                         f" '{title}'?  ('y' to confirm): "
-                    )
-                    .lower()
-                    .strip()
-                )
-                return confirm == "y" or confirm == "yes" or confirm == "oui"
-            elif act == "remove":
-                confirm = (
-                    input(
-                        f"{Fore.LIGHTMAGENTA_EX}Remove '{title}'?"
-                        f"  ('y' to confirm): "
                     )
                     .lower()
                     .strip()
@@ -359,7 +350,7 @@ try:  # Try to do the thing
 
             if args.remove:  # Removing
                 for title in args.remove:
-                    if confirm("remove", title) and remove(title):
+                    if confirm('remove', title) and remove(title):
                         print(
                             f"{Fore.LIGHTWHITE_EX}{Back.GREEN}"
                             f"'{title}' removed successfully!"
@@ -374,7 +365,7 @@ try:  # Try to do the thing
                 title, type = args.insert
                 type = type.title()  # Convert to title case
                 if valid(type):
-                    if confirm("insert", title, type) and insert(title, type):
+                    if confirm('insert', title, type) and insert(title, type):
                         print(
                             f"{Fore.LIGHTWHITE_EX}{Back.GREEN}"
                             f"Inserted {type.lower()} '{title}' successfully!"
@@ -392,9 +383,9 @@ try:  # Try to do the thing
                     )
 
             elif args.list:  # Listing
-                if args.list == "films":  # Films
+                if args.list == 'films':  # Films
                     list_movies(MovieType.FILM.value)
-                elif args.list == "shows":  # Shows
+                elif args.list == 'shows':  # Shows
                     list_movies(MovieType.SHOW.value)
                 else:  # All
                     list_all()
@@ -403,9 +394,9 @@ try:  # Try to do the thing
                 list_col()
 
             elif args.amount:  # Amounts'
-                if args.amount == "films":  # Films
+                if args.amount == 'films':  # Films
                     amount(MovieType.FILM.value)
-                elif args.amount == "shows":  # Shows
+                elif args.amount == 'shows':  # Shows
                     amount(MovieType.SHOW.value)
                 else:  # All
                     amount(args.amount)
