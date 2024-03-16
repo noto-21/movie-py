@@ -238,6 +238,9 @@ try:  # Try to do the thing
 
             # Get the results and store them in a list
             results = cursor.fetchall()
+            
+            if movie_type == "all":
+                sum = results[0][1] + results[1][1]  # Sum of all movies
 
             # Print the results
             for result in results:
@@ -256,6 +259,11 @@ try:  # Try to do the thing
                 )
                 print(f"{bg}{fg_1}{result[0]}s:", end="")
                 print(f" {fg_2}{result[1]}")
+            if movie_type == "all":
+                # Print the total with a magenta background
+                print(
+                    f"{Back.MAGENTA}{Fore.LIGHTWHITE_EX}Total: {sum}"
+                )
 
         # Recommend a movie
         def recommend(movie_type=None):
