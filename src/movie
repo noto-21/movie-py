@@ -238,7 +238,7 @@ try:  # Try to do the thing
 
             # Get the results and store them in a list
             results = cursor.fetchall()
-            
+
             if movie_type == "all":
                 sum = results[0][1] + results[1][1]  # Sum of all movies
 
