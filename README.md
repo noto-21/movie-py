@@ -1,3 +1,7 @@
+<hr>
+
+<div align="center">
+
 # movie-py
 Recommends your favourite films/shows at random!
 
@@ -5,7 +9,7 @@ Recommends your favourite films/shows at random!
 Can be placed in `/usr/local/bin` (with root permission) to be used with the shell.  If problems with running occur, try to change execution permission via `sudo chmod +x /usr/local/bin/movie`.
 
 ## SQLite Database
-SQLite integration is now complete!  This will hopefully make the backend requirement a little less involved on the client-side of things compared to MySQL.  
+SQLite integration is now complete!  
 
 The `movie-py.db` file will be stored in `/home/<username>/.config` on Linux, and `C:\Users\<username>\AppData\Local` on Windows.  This will provide storage for your films and TV shows via '-i', as is explained below.
 
@@ -37,6 +41,13 @@ options:
 `movie --remove "Shrek"`
 
 ## Dependencies
+
+***NOTE***: It is no longer necessary to install dependencies on your own part thanks to the compiled [binary](./movie) included in the root directory of this repo.  If you still wish to use the source file located in [src](./src), then the following will be necessary to install for proper functionality.
+
 ### Python Packages
 
 - colorama: Library for colored terminal text output.  Install using `pip install colorama`
+
+</div>
+
+<hr>
