@@ -42,7 +42,7 @@ options:
 
 ## Dependencies
 
-***NOTE***: It is no longer necessary to install dependencies on your own part thanks to the compiled [binary](./dist/movie) included in the root directory of this repo.  If you still wish to use the source file located in [src](./src), then the following will be necessary to install for proper functionality.
+***NOTE***: It is no longer necessary to install dependencies on your own part thanks to the compiled binary included in the root directory of this repo.  If you still wish to use the source file located in [src](./src), then the following will be necessary to install for proper functionality.
 
 ### Python Packages
 
