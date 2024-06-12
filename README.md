@@ -14,6 +14,9 @@ SQLite integration is now complete!
 The `movie-py.db` file will be stored in `/home/<username>/.config` on Linux, and `C:\Users\<username>\AppData\Local` on Windows.  This will provide storage for your films and TV shows via '-i', as is explained below.
 
 ## Flags
+
+</div>
+
 ```
 usage: movie [-h] [-t [[film|show]]] [-l [[all|films|shows]]] [-c] [-i <title> <type>] [-r <title> [<title> ...]] [-a [[films|shows|all]]]
 
@@ -34,6 +37,8 @@ options:
                         View the number of movies available in the database (films, shows, or all)
 ```
 
+<div align="center">
+
 ### Example Usage
 `movie -l`
 `movie --type show`
@@ -42,12 +47,12 @@ options:
 
 ## Dependencies
 
-***NOTE***: It is no longer necessary to install dependencies on your own part thanks to the compiled binary included in the root directory of this repo.  If you still wish to use the source file located in [src](./src), then the following will be necessary to install for proper functionality.
+</div>
+
+***NOTE***: It is no longer necessary to install dependencies on your own part thanks to the compiled binary included in the root directory of this repo.  If you still wish to use the source file located in [src](./src), then the following will be necessary to install for proper functionality:
 
 ### Python Packages
 
 - colorama: Library for colored terminal text output.  Install using `pip install colorama`
-
-</div>
 
 <hr>
